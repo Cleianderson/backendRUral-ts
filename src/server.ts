@@ -9,5 +9,5 @@ mongoConnection.on('open', () => {
 })
 
 app.listen(process.env.PORT || 2222, () => {
-  console.info('Server running')
+  console.info(`Server running with NODE_ENV = ${process.env.NODE_ENV}\n\rNODE_ENV === \'development\' is ${process.env.NODE_ENV === 'development'}`)
 })
