@@ -13,7 +13,7 @@ export async function createWarning (req, res) {
     app_id: '85b3451d-6f7d-481f-b66e-1f93fe069135',
     contents: { en: content, pt: content },
     heading: { en: title, pt: title },
-    data: { allWarns }
+    data: { ...allWarns }
   }
 
   if(process.env.NODE_ENV === 'development') {
@@ -31,13 +31,13 @@ export async function createWarning (req, res) {
       Authorization: `Basic ${process.env.REST_API_KEY_ONE_SIGNAL}`
     }
   }
-  if(testing === false){
+  if(testing === false || testing === undefined){
     const resolve = await axios.post(
       'https://onesignal.com/api/v1/notifications',
        dataOneSignal,
        optionsOneSignal,
        )
-    return res.status(resolve.status).json({ warning: newWarn, onesignal_response: resolve.data })
+    return res.status(resolve.status).json({ ...dataOneSignal })
   } else {
     return res.status(200).json({ ...dataOneSignal })
   }
