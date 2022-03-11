@@ -1,14 +1,14 @@
 import { read } from 'xlsx'
 
 const typeFoods = [
-  'prato principal 1',
-  'prato principal 2',
-  'na grelha',
-  'fast grill',
+  'pratoprincipal1',
+  'pratoprincipal2',
+  'nagrelha',
+  'fastgrill',
   'vegetariano',
   'guarnição',
-  'salada crua',
-  'salada cozida',
+  'saladacrua',
+  'saladacozida',
   'sopa',
   'sobremesa',
   'suco'
@@ -23,8 +23,8 @@ const extractFoods = (filePath) => {
   cells.forEach((cell, index) => {
     if (firstSheet[cell].t !== 's') return
 
-    const valueCell = firstSheet[cell].v
-    if (typeFoods.includes(valueCell.toLowerCase().trim())) {
+    const valueCell = firstSheet[cell].v.toLowerCase().replaceAll(' ','')
+    if (typeFoods.includes(valueCell)) {
       week[filterItems(valueCell)] = []
       let _index = 1
       while (
@@ -42,14 +42,25 @@ const extractFoods = (filePath) => {
 }
 
 const filterItems = (item) => {
-  if (item.toLowerCase() === 'sopa') return 'sopa'
-  if (item.toLowerCase() === 'na grelha') return 'gre'
-  if (item.toLowerCase() === 'fast grill') return 'fag'
-  if (item.toLowerCase() === 'salada cozida') return 'sco'
-  if (item.match(/\d/)) {
-    return String(item.charAt(0) + item.match(/\d/)[0]).toLowerCase()
+  const itemCleaned = item.toLowerCase().replaceAll(' ', '')
+  let strToReturn = itemCleaned.substring(0, 3).toLowerCase()
+
+  if (itemCleaned === 'sopa') {
+    strToReturn = 'sopa'
   }
-  return item.substring(0, 3).toLowerCase()
+  if (itemCleaned === 'nagrelha') {
+    strToReturn = 'gre'
+  }
+  if (itemCleaned === 'fastgrill') {
+    strToReturn = 'fag'
+  }
+  if (itemCleaned === 'saladacozida') {
+    strToReturn = 'sco'
+  }
+  if (itemCleaned.match(/\d/)) {
+    strToReturn = String(itemCleaned.charAt(0) + itemCleaned.match(/\d/)[0]).toLowerCase()
+  }
+  return strToReturn
 }
 
 const mountDataToApi = (fileLaunch, fileDinner) => {
@@ -77,7 +88,7 @@ const mountDataToApi = (fileLaunch, fileDinner) => {
   return week
 }
 
-export async function parseExcelFilesToWeekData (req, res) {
+export async function parseExcelFilesToWeekData(req, res) {
   let data = null
   try {
     if (req.files[0].originalname.toLowerCase().includes('almo')) {
