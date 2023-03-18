@@ -10,18 +10,20 @@ export async function createWarning (req, res) {
   const allWarns = await Warning.find()
 
   let dataOneSignal = {
-    app_id: '85b3451d-6f7d-481f-b66e-1f93fe069135',
+    app_id: '9cf90441-8151-4e1a-91a5-ce90b102410c',
     contents: { en: content, pt: content },
     heading: { en: title, pt: title },
-    data: { ...allWarns }
+    data: { ...allWarns },
+    included_segments: ['Dev'],
+    excluded_segments: ['All']
   }
-
+  
   if(process.env.NODE_ENV === 'development') {
     dataOneSignal = { 
       ...dataOneSignal,
-      app_id: '9cf90441-8151-4e1a-91a5-ce90b102410c',
-      included_segments: ['Dev'],
-      excluded_segments: ['All'],
+      app_id: '85b3451d-6f7d-481f-b66e-1f93fe069135',
+      included_segments: ['All'],
+      excluded_segments: []
     }
   }
 
