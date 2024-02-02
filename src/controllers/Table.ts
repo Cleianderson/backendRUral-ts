@@ -5,16 +5,12 @@ import { TableModel } from '~/models/Table'
 export async function getSortedTables (req, res) {
   const tables = await TableModel.find()
   const sortedTable = tables.sort((a, b) => {
-    if (a.year === b.year) {
-      if (a.number_week < b.number_week) return 1
-      if (a.number_week === b.number_week) return 0
-      if (a.number_week > b.number_week) return -1
-    } else {
-      if (a.number_week < b.number_week) return -1
-      if (a.number_week === b.number_week) return 0
-      if (a.number_week > b.number_week) return 1
+    if(a.year === b.year){
+        return b.number_week - a.number_week
     }
+    return b.year -  a.year
   })
+  
   return res.status(200).json(sortedTable)
 }
 
